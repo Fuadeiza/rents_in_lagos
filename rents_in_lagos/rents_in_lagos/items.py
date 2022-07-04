@@ -5,14 +5,6 @@
 
 import scrapy
 
-
-class RentsInLagosItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
-
-
-
 # Define here the models for your scraped items
 #
 # See documentation in:
@@ -23,31 +15,32 @@ from scrapy.item import Field, Item
 from scrapy.loader import ItemLoader
 
 
+
+
 class FileItem(Item):
     """See pipelines.PublishersPipeline for fields that need to be returned"""
-
     # Auto generated in PublishersPipeline
-    crawled = Field()  # Crawl datetime
+    # crawled = Field()  # Crawl datetime
 
     # Required
-    location = Field()  # response.url
-    house_type = Field()  # HTML dump of body section
-    price = Field()  # URL of the document file
+    location = scrapy.Field(output_processor=TakeFirst())  # response.url
+    house_type = scrapy.Field(output_processor=TakeFirst()) # HTML dump of body section
+    price = scrapy.Field(output_processor=TakeFirst()) # URL of the document file
 
 
 
+# class FileItemLoader(ItemLoader):
+#     # default_output_processor = TakeFirst()
+#     default_output_processor = TakeFirst()
 
-class FileItemLoader(ItemLoader):
-    default_output_processor = TakeFirst()
+#     # location_in = MapCompose(str.strip)
+#     location_out = TakeFirst()
 
-    location_in = MapCompose(str.strip)
-    location_out = Join()
+#     # house_type_in = MapCompose(str.strip)
+#     house_type_out = TakeFirst()
 
-    house_type_in = MapCompose(str.strip)
-    house_type_out = Join()
-
-    price_in = MapCompose(str.strip)
-    price_out = Join()
+#     # price_in = MapCompose(str.strip)
+#     price_out = TakeFirst()
 
 
 

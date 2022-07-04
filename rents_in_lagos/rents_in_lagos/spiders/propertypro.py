@@ -1,3 +1,4 @@
+from types import NoneType
 import scrapy
 import re
 
@@ -66,12 +67,13 @@ class PropertyproSpider(scrapy.Spider):
         UNWANTED_VALUES = ["Premium Gold", "Sponsored", "Premium"]
         cleaned_price = []
         titles = response.css(".single-room-sale .single-room-text")
-        prices = response.css(".single-room-sale .single-room-text h3 span[content!='NGN']::text").getall()
+        prices = response.css(".single-room-sale .single-room-text h3 span[content!='NGN']::text").extract()
         # clean prices
+
         cleaned_price = [price.split("/")[0].replace(",","") for price in prices ] 
         if "$" in cleaned_price:
             cleaned_price.remove("$")
-        locations = response.css(".single-room-sale .single-room-text h4:not([class])::text").getall()
+        locations = response.css(".single-room-sale .single-room-text h4:not([class])::text").extract()
 
         cleaned_location= []
         for location in locations: 
@@ -84,13 +86,14 @@ class PropertyproSpider(scrapy.Spider):
 
         for title in titles:
             item = ItemLoader(FileItem(), title)
-            title_text = title.css(".listings-property-title::text").get()
-            cleaned_title = re.findall('[0-9]+', title_text)
-            if not cleaned_title:
-                cleaned_title = "0"
-            item.add_value("house_type", cleaned_title)
+            title_text = title.css(".listings-property-title::text").extract_first()
+            try:
+                cleaned_title = re.findall('[0-9]+', title_text)[0]
+            except IndexError:
+                cleaned_title = 0
+            item.add_value("house_type", int(cleaned_title))
             num = titles.index(title)
-            item.add_value("price", cleaned_price[num])
+            item.add_value("price", int(cleaned_price[num]))
             item.add_value("location", cleaned_location[num])
             yield item.load_item()
         # next_page = response.css("a[alt='view next property page']::attr('href')").get()

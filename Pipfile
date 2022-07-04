@@ -5,6 +5,8 @@ name = "pypi"
 
 [packages]
 scrapy = "*"
+pymongo = {extras = ["srv"], version = "*"}
+python-dotenv = "*"
 
 [dev-packages]
 
