@@ -23,24 +23,11 @@ class FileItem(Item):
     # crawled = Field()  # Crawl datetime
 
     # Required
-    location = scrapy.Field(output_processor=TakeFirst())  # response.url
+    location = scrapy.Field()  # response.url
     house_type = scrapy.Field(output_processor=TakeFirst()) # HTML dump of body section
     price = scrapy.Field(output_processor=TakeFirst()) # URL of the document file
 
 
-
-# class FileItemLoader(ItemLoader):
-#     # default_output_processor = TakeFirst()
-#     default_output_processor = TakeFirst()
-
-#     # location_in = MapCompose(str.strip)
-#     location_out = TakeFirst()
-
-#     # house_type_in = MapCompose(str.strip)
-#     house_type_out = TakeFirst()
-
-#     # price_in = MapCompose(str.strip)
-#     price_out = TakeFirst()
 
 
 
