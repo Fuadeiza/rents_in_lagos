@@ -68,8 +68,13 @@ class PropertyproSpider(scrapy.Spider):
         # clean prices
 
         cleaned_price = [price.split("/")[0].replace(",","") for price in prices ] 
-        if "$" in cleaned_price:
-            cleaned_price.remove("$")
+        for value in cleaned_price:
+            if "$" in str(value):
+                print(value)
+                val = value.replace("$","0")
+                val = int(val)
+                i = cleaned_price.index(value)
+                cleaned_price = cleaned_price[:i]+[int(val)]+cleaned_price[i+1:]
         locations = response.css(".single-room-sale .single-room-text h4:not([class])::text").extract()
 
         cleaned_location= []
@@ -94,11 +99,12 @@ class PropertyproSpider(scrapy.Spider):
                 item.add_value("house_type", int(cleaned_title))
                 num = titles.index(title)
                 item.add_value("price", int(cleaned_price[num]))
-                item.add_value("location", cleaned_location[num])
+                item.add_value("latitude", cleaned_location[num][0])
+                item.add_value("longitude", cleaned_location[num][1])
                 yield item.load_item()
             except IndexError:
                 pass
-        # next_page = response.css("a[alt='view next property page']::attr('href')").get()
-        # if next_page is not None:
-        #     yield response.follow(next_page, callback=self.parse)
+        next_page = response.css("a[alt='view next property page']::attr('href')").get()
+        if next_page is not None:
+            yield response.follow(next_page, callback=self.parse)
 

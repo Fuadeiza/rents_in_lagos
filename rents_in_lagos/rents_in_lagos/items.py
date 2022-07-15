@@ -23,7 +23,9 @@ class FileItem(Item):
     # crawled = Field()  # Crawl datetime
 
     # Required
-    location = scrapy.Field()  # response.url
+    # location = scrapy.Field() 
+    latitude = scrapy.Field(output_processor=TakeFirst())
+    longitude = scrapy.Field(output_processor=TakeFirst()) # response.url
     house_type = scrapy.Field(output_processor=TakeFirst()) # HTML dump of body section
     price = scrapy.Field(output_processor=TakeFirst()) # URL of the document file
 
