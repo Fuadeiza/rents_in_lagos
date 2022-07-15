@@ -87,6 +87,6 @@ ROBOTSTXT_OBEY = True
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
-ITEM_PIPELINES = {
-  "rents_in_lagos.pipelines.MongoDBPipeline": 500
-}
+# ITEM_PIPELINES = {
+#   "rents_in_lagos.pipelines.MongoDBPipeline": 500
+# }
